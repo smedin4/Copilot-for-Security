@@ -74,7 +74,7 @@
                                 },
                                 "method": "post",
                                 "body": {
-                                    "PromptbookId": "b44c8f4c-0e39-462b-bcff-08d0c6ec13f6",
+                                    "PromptbookId": "TO-BE-FILLED-IN-LOGIC-APP-DESIGNER-USING-DROP-DOWN-AND-SELECTING-THE-PROMPTBOOK",
                                     "PromptbookInputs": {
                                         "SENTINEL_INCIDENT_ID": "@triggerBody()?['object']?['properties']?['incidentNumber']"
                                     }
