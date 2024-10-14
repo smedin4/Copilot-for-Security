@@ -1,0 +1,128 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscription_id": {
+            "type": "String",
+            "metadata": {
+                "description": "The Subscription ID in GUID format"
+            }
+        },
+        "location": {
+            "defaultValue": "uaenorth",
+            "type": "String"
+        },
+        "workflows_CfS_Sentinel_Incident_trigger_name": {
+            "defaultValue": "CfS-Sentinel-Incident-trigger",
+            "type": "String"
+        },
+        "connections_azuresentinel_1_externalid": {
+            "defaultValue": "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Web/connections/azuresentinel-1",
+            "type": "String"
+        },
+        "connections_securitycopilot_2_externalid": {
+            "defaultValue": "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Web/connections/securitycopilot-2",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_CfS_Sentinel_Incident_trigger_name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "Microsoft_Sentinel_incident": {
+                            "type": "ApiConnectionWebhook",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azuresentinel-1']['connectionId']"
+                                    }
+                                },
+                                "body": {
+                                    "callback_url": "@listCallbackUrl()"
+                                },
+                                "path": "/incident-creation"
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Run_a_Copilot_for_Security_promptbook": {
+                            "runAfter": {},
+                            "limit": {
+                                "timeout": "PT50M"
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['securitycopilot-1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "body": {
+                                    "PromptbookId": "b44c8f4c-0e39-462b-bcff-08d0c6ec13f6",
+                                    "PromptbookInputs": {
+                                        "SENTINEL_INCIDENT_ID": "@triggerBody()?['object']?['properties']?['incidentNumber']"
+                                    }
+                                },
+                                "path": "/run-promptbook"
+                            }
+                        },
+                        "Add_comment_to_incident_(V3)": {
+                            "runAfter": {
+                                "Run_a_Copilot_for_Security_promptbook": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azuresentinel-1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "body": {
+                                    "incidentArmId": "@triggerBody()?['object']?['id']",
+                                    "message": "<p class=\"editor-paragraph\">@{last(body('Run_a_Copilot_for_Security_promptbook')['evaluationResultList'])['evaluationResultContent']}</p>"
+                                },
+                                "path": "/Incidents/Comment"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "azuresentinel-1": {
+                                "id": "[concat('/subscriptions/', parameters('subscription_id'), '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/azuresentinel')]",
+                                "connectionId": "[parameters('connections_azuresentinel_1_externalid')]",
+                                "connectionName": "azuresentinel-1"
+                            },
+                            "securitycopilot-1": {
+                                "id": "[concat('/subscriptions/', parameters('subscription_id'), '/providers/Microsoft.Web/locations/', parameters('location'), '/managedApis/securitycopilot')]",
+                                "connectionId": "[parameters('connections_securitycopilot_2_externalid')]",
+                                "connectionName": "securitycopilot-2"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
