@@ -20,7 +20,7 @@ paths:
               type: string
             required: true
             default: tcp
-            description: Command value. One of: blacklist, smtp, mx, a, spf, txt, ptr, cname, whois, arin, soa, tcp, http, https, ping, trace, dns.
+            description: Command value. One of these blacklist, smtp, mx, a, spf, txt, ptr, cname, whois, arin, soa, tcp, http, https, ping, trace, dns.
           - in: path
             name: argument
             schema:
