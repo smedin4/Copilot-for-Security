@@ -14,7 +14,7 @@ paths:
         operationId: "MXToolBoxLookup"
         summary: "MXToolBox Lookup Command - Argument Parameters"
         parameters:
-          - in: path
+          - in: query
             name: arg
             schema:
               type: string
