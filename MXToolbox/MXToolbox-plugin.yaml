@@ -12,13 +12,13 @@ paths:
   /Lookup/{Command}/?argument={Argument}:
     get:
         operationId: "MXToolBoxLookup"
-        summary: "MXToolBox Lookup Command - Argument Parameters"
+        summary: "MXToolBox Lookup Command - Retrieve Failed blacklists which are the ones that blacklisted the Argument provided"
         parameters:
           - in: path
             name: Command
             schema:
               type: string
-            required: true
+            required: false
             default: blacklist
             description: Command value. One of these blacklist, smtp, mx, a, spf, txt, ptr, cname, whois, arin, soa, tcp, http, https, ping, trace, dns
           - in: path
