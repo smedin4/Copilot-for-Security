@@ -14,7 +14,7 @@ paths:
         operationId: "MXToolBoxLookup"
         summary: "MXToolBox Lookup Command"
         description: |
-          Get only blacklist items under Failed key.
+          Get only blacklist items under Failed key, ignoring Passed key. All items in Failed key are a blacklist that includes the IP or domain as a reported malicious element.
           #ExamplePrompt Tell me if MXToolbox blacklists include this IP or domain 
           #ExamplePrompt Confirm the reputation of this IP or domain   
         parameters:
