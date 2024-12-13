@@ -9,13 +9,13 @@ servers:
   - url: "https://api.mxtoolbox.com/api/v1/"
 
 paths:
-  /Lookup/blacklist/?argument={arg}:
+  /Lookup/blacklist/:
     get:
         operationId: "MXToolBoxLookup"
         summary: "MXToolBox Lookup Command - Argument Parameters"
         parameters:
           - in: query
-            name: arg
+            name: argument
             schema:
               type: string
             required: true
