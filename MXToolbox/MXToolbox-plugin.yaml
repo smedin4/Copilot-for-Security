@@ -9,28 +9,10 @@ servers:
   - url: "https://api.mxtoolbox.com/api/v1/"
 
 paths:
-  /Lookup/{Command}/?argument={Argument}:
+  /Lookup/blacklist/?argument=177.67.68.34:
     get:
         operationId: "MXToolBoxLookup"
-        summary: "MXToolBox Lookup Command"
-        description: |
-          Get only blacklist items under Failed key, ignoring Passed key. All items in Failed key are a blacklist that includes the IP or domain as a reported malicious element.
-          #ExamplePrompt Tell me if MXToolbox blacklists include this IP or domain 
-          #ExamplePrompt Confirm the reputation of this IP or domain   
-        parameters:
-          - in: path
-            name: Command
-            schema:
-              type: string
-            required: false
-            default: blacklist
-            description: Command value. One of these blacklist, smtp, mx, a, spf, txt, ptr, cname, whois, arin, soa, tcp, http, https, ping, trace, dns
-          - in: path
-            name: Argument
-            schema:
-              type: string
-            required: true
-            description: Argument value for example contoso.com
+        summary: "MXToolBox Lookup Command - Argument Parameters"
         responses:
           "200":
             description: OK
