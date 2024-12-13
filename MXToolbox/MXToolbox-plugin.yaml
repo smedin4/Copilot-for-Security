@@ -12,7 +12,11 @@ paths:
   /Lookup/{Command}/?argument={Argument}:
     get:
         operationId: "MXToolBoxLookup"
-        summary: "MXToolBox Lookup Command - Retrieve Failed blacklists which are the ones that blacklisted the Argument provided"
+        summary: "MXToolBox Lookup Command"
+        description: |
+          Get only blacklist items under Failed key.
+          #ExamplePrompt Tell me if MXToolbox blacklists include this IP or domain 
+          #ExamplePrompt Confirm the reputation of this IP or domain   
         parameters:
           - in: path
             name: Command
