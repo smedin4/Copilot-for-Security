@@ -9,10 +9,17 @@ servers:
   - url: "https://api.mxtoolbox.com/api/v1/"
 
 paths:
-  /Lookup/blacklist/?argument=177.67.68.34:
+  /Lookup/blacklist/?argument={arg}:
     get:
         operationId: "MXToolBoxLookup"
         summary: "MXToolBox Lookup Command - Argument Parameters"
+        parameters:
+          - in: path
+            name: arg
+            schema:
+              type: string
+            required: true
+            description: Argument value for example contoso.com
         responses:
           "200":
             description: OK
