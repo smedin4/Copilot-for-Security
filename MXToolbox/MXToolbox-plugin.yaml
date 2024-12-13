@@ -19,7 +19,7 @@ paths:
             schema:
               type: string
             required: true
-            description: Argument value for example fabrikam.com
+            description: Argument value for example alpineskyhouse.com
         responses:
           "200":
             description: OK
